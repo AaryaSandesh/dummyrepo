@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voter ID Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            width: 40%;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #0078D4;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            color: white;
+            background: #0078D4;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🔐 Voter ID Verification</h1>
+        <input type="text" id="voterIDNumber" placeholder="Enter Voter ID Number (12 Digits)" maxlength="12">
+        <br>
+        <button onclick="authenticate()">Authenticate</button>
+        <p class="error" id="errorMsg"></p>
+    </div>
+
+    <script>
+        // ✅ List of valid Voter IDs (Simulated database)
+        const validVoterIDs = ["300892803118", "987654321012", "234567890123", "456789123456"];
+
+        // ✅ Check if a voter has already voted
+        let previousVoter = localStorage.getItem("voterID");
+
+        function authenticate() {
+            let voterID = document.getElementById("voterIDNumber").value;
+            let errorMsg = document.getElementById("errorMsg");
+
+            // Validate Voter ID Format (Only numbers, 12 digits)
+            if (!/^\d{12}$/.test(voterID)) {
+                errorMsg.textContent = "❌ Invalid Voter ID format! Must be 12 digits.";
+                return;
+            }
+
+            // Check if voter is the same as the previous one
+            if (previousVoter && previousVoter === voterID) {
+                errorMsg.textContent = "❌ You have already voted. Another voter must log in!";
+                return;
+            }
+
+            // Check if Voter ID is in the valid list
+            if (validVoterIDs.includes(voterID)) {
+                // ✅ Clear previous voter and authenticate new voter
+                localStorage.clear();
+                localStorage.setItem("authenticated", "true");
+                localStorage.setItem("voterID", voterID);
+
+                alert("✅ Authentication Successful! Redirecting to voting page...");
+                window.location.href = "vote.html";
+            } else {
+                errorMsg.textContent = "❌ Voter ID not found in the system!";
+            }
+        }
+    </script>
+
+</body>
+</html>

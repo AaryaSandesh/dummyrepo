@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fair Elect - Voting</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        text-align: center;
+        padding: 20px;
+      }
+      .container {
+        background: white;
+        width: 50%;
+        margin: auto;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #0078d4;
+      }
+      .candidate {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #f9f9f9;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+      }
+      .candidate img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+      .vote-btn {
+        padding: 10px 15px;
+        font-size: 16px;
+        color: white;
+        background: #28a745;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .vote-btn:hover {
+        background: #218838;
+      }
+      .disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+      #timer {
+        font-size: 18px;
+        font-weight: bold;
+        color: red;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🗳️ Fair Elect - Secure Voting</h1>
+      <p id="timer">⏳ Voting window: 30 seconds...</p>
+
+      <div class="candidate">
+        <img
+          src="https://img.freepik.com/free-photo/cheerful-indian-businessman-smiling-closeup-portrait-jobs-career-campaign_53876-129416.jpg?t=st=1742490475~exp=1742494075~hmac=b2faf0ac285ab41460cdaff874eb29857055a99fa9186d40e9ddd2144a661577&w=1380"
+          alt="Rajesh Sharma"
+          width="250px"
+          height="250px"
+        />
+        <span>Rajesh Singh <br />
+            Aapki Jan Party <br>
+            🦁</span>
+        <button class="vote-btn" onclick="castVote('Rajesh Singh')">
+          Vote
+        </button>
+      </div>
+
+      <div class="candidate">
+        <img
+          src="https://img.freepik.com/premium-photo/young-handsome-bearded-persian-man_251136-17938.jpg?ga=GA1.1.1171098741.1742490007&semt=ais_hybrid"
+          alt="Mahesh Rajput"
+          width="250px"
+          height="250px"
+        />
+        <span
+          >Mahesh Rajput <br />
+          Lok Party <br>
+          🐘</span
+        >
+        <button class="vote-btn" onclick="castVote('Mahesh Rajput')">
+          Vote
+        </button>
+      </div>
+
+      <div class="candidate">
+        <img
+          src="https://img.freepik.com/free-photo/indian-man-city-male-traditional-turban-hinduist-summer-city_1157-41023.jpg?t=st=1742490689~exp=1742494289~hmac=f307429ede55c4f102b95b5dc398d868330b8bd6dca10eebc4dfffe97ee6935d&w=740"
+          alt="Insaan Singh"
+          width="250px"
+          height="250px"
+        />
+        <span>Insaan Singh <br>
+              (Independant)<br>
+            🌸</span>
+        <button class="vote-btn" onclick="castVote('Insaan Singh')">
+          Vote
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // Check if user is authenticated
+      if (localStorage.getItem("authenticated") !== "true") {
+        alert("❌ Unauthorized access! Redirecting to authentication page...");
+        window.location.href = "auth.html";
+      }
+
+      // Check if already voted
+      if (localStorage.getItem("voted") === "true") {
+        alert("✅ You have already voted!");
+        window.location.href = "thankyou.html";
+      }
+
+      let timeLeft = 30;
+      let timerDisplay = document.getElementById("timer");
+      let voteButtons = document.querySelectorAll(".vote-btn");
+
+      let countdown = setInterval(() => {
+        timeLeft--;
+        timerDisplay.innerHTML = `⏳ Time left: ${timeLeft} seconds`;
+
+        if (timeLeft <= 0) {
+          clearInterval(countdown);
+          timerDisplay.innerHTML = "❌ Voting time is over!";
+          voteButtons.forEach((button) => {
+            button.classList.add("disabled");
+            button.setAttribute("disabled", "true");
+          });
+
+          setTimeout(() => {
+            window.location.href = "oops.html"; // Redirect to "Oops! Voting Time Over" page
+          }, 2000);
+        }
+      }, 1000);
+
+      function castVote(candidate) {
+        document.getElementById(
+          "timer"
+        ).innerHTML = `✅ You voted for ${candidate}!`;
+        voteButtons.forEach((button) => {
+          button.classList.add("disabled");
+          button.setAttribute("disabled", "true");
+        });
+
+        localStorage.setItem("voted", "true");
+
+        setTimeout(() => {
+          window.location.href = "thanks.html"; // Redirect to Thank You page
+        }, 2000);
+      }
+    </script>
+  </body>
+</html>
