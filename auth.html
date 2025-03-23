@@ -90,8 +90,8 @@
                 localStorage.setItem("authenticated", "true");
                 localStorage.setItem("voterID", voterID);
 
-                alert("✅ Authentication Successful! Redirecting to voting page...");
-                window.location.href = "vote.html";
+                alert("✅ Authentication Successful! Redirecting to fingerprint verification...");
+                window.location.href = "fingerprint.html";
             } else {
                 errorMsg.textContent = "❌ Voter ID not found in the system!";
             }
@@ -100,3 +100,4 @@
 
 </body>
 </html>
+ 
