@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Election Commission of India - Government Worker Portal</title>
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(to right, #008080, #004d40);
+            color: white;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .header img {
+            width: 80px;
+        }
+        .container {
+            background: white;
+            color: black;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+            display: inline-block;
+            transition: transform 0.3s ease-in-out;
+        }
+        .container:hover {
+            transform: scale(1.03);
+        }
+        select, input, button {
+            font-size: 16px;
+            padding: 10px;
+            margin: 12px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease-in-out;
+        }
+        button:hover {
+            background-color: #388E3C;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="https://imgs.search.brave.com/bUoMpnH49BlGdAPXd6WyffWJebxOC6phoEhCpENhfYI/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9hczIu/ZnRjZG4ubmV0L2pw/Zy8wNS84NC8yNi82/MS8xMDAwX0ZfNTg0/MjY2MTk2X2xGa1p0/N0NDZ0dybGhpbDgz/RHNJME15R3ZkOGVT/RG9jLmpwZw" alt="ECI Logo">
+        <h1>Election Commission of India</h1>
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/1200px-Flag_of_India.svg.png" alt="Indian Flag">
+    </div>
+
+    <h2>Select Election Details</h2>
+
+    <div class="container">
+        <label for="electionType"><b>Election Type:</b></label>
+        <select id="electionType">
+            <option value="General">General Election</option>
+            <option value="State">State Election</option>
+            <option value="Local">Local Election</option>
+        </select>
+
+        <br>
+
+        <label for="state"><b>State:</b></label>
+        <select id="state" onchange="updateConstituencies()">
+            <option value="">-- Select State --</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Gujarat">Gujarat</option>
+        </select>
+
+        <br>
+
+        <label for="constituency"><b>Constituency:</b></label>
+        <select id="constituency">
+            <option value="">-- Select Constituency --</option>
+        </select>
+
+        <br>
+
+        <label for="pollingStation"><b>Polling Station Name:</b></label>
+        <input type="text" id="pollingStation" placeholder="Enter Polling Station">
+
+        <br>
+
+        <button onclick="proceedToAuth()">Proceed</button>
+    </div>
+
+    <script>
+        const constituencies = {
+            "Maharashtra": ["Pune", "Mumbai", "Nagpur", "Nashik"],
+            "Karnataka": ["Bangalore", "Mysore", "Hubli", "Mangalore"],
+            "Delhi": ["New Delhi", "North Delhi", "South Delhi"],
+            "Gujarat": ["Ahmedabad", "Surat", "Vadodara"]
+        };
+
+        function updateConstituencies() {
+            let state = document.getElementById("state").value;
+            let constituencyDropdown = document.getElementById("constituency");
+
+            // Clear previous options
+            constituencyDropdown.innerHTML = '<option value="">-- Select Constituency --</option>';
+
+            if (state && constituencies[state]) {
+                constituencies[state].forEach(constituency => {
+                    let option = document.createElement("option");
+                    option.value = constituency;
+                    option.textContent = constituency;
+                    constituencyDropdown.appendChild(option);
+                });
+            }
+        }
+
+        function proceedToAuth() {
+            let electionType = document.getElementById("electionType").value;
+            let state = document.getElementById("state").value;
+            let constituency = document.getElementById("constituency").value;
+            let pollingStation = document.getElementById("pollingStation").value;
+
+            if (!state || !constituency || !pollingStation) {
+                alert("⚠️ Please fill all the details before proceeding.");
+                return;
+            }
+
+            localStorage.setItem("electionType", electionType);
+            localStorage.setItem("state", state);
+            localStorage.setItem("constituency", constituency);
+            localStorage.setItem("pollingStation", pollingStation);
+
+            window.location.href = "auth.html"; // Redirect to authentication page
+        }
+    </script>
+
+</body>
+</html>
