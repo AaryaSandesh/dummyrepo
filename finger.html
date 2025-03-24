@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fingerprint Authentication - Fair Elect</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #673AB7, #512DA8);
+            color: white;
+            padding: 50px;
+        }
+        .container {
+            background: white;
+            color: black;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+            display: inline-block;
+        }
+        button {
+            font-size: 16px;
+            padding: 12px;
+            margin: 12px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+        }
+        .register { background-color: #FF5722; color: white; }
+        .authenticate { background-color: #4CAF50; color: white; }
+    </style>
+</head>
+<body>
+
+    <h1>Fingerprint Authentication</h1>
+    <p>Register your fingerprint first, then authenticate before voting.</p>
+
+    <div class="container">
+        <button class="register" onclick="registerFingerprint()">Register Fingerprint</button>
+        <button class="authenticate" onclick="authenticateFingerprint()">Authenticate & Vote</button>
+    </div>
+
+    <script>
+        let publicKeyCredential; // Store fingerprint registration data
+
+        async function registerFingerprint() {
+            try {
+                const options = {
+                    challenge: new Uint8Array([1, 2, 3, 4]), // Dummy challenge
+                    rp: { name: "Fair Elect" },
+                    user: {
+                        id: new Uint8Array([5, 6, 7, 8]),
+                        name: "voter123",
+                        displayName: "Voter 123"
+                    },
+                    pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+                    authenticatorSelection: { authenticatorAttachment: "platform" },
+                    timeout: 60000
+                };
+
+                publicKeyCredential = await navigator.credentials.create({ publicKey: options });
+
+                if (publicKeyCredential) {
+                    alert("✅ Fingerprint Registered Successfully!");
+                }
+            } catch (error) {
+                alert("❌ Registration Failed: " + error.message);
+            }
+        }
+
+        async function authenticateFingerprint() {
+            try {
+                if (!publicKeyCredential) {
+                    alert("⚠️ Please register your fingerprint first!");
+                    return;
+                }
+
+                const options = {
+                    challenge: new Uint8Array([1, 2, 3, 4]),
+                    allowCredentials: [{ id: publicKeyCredential.rawId, type: "public-key" }],
+                    timeout: 60000
+                };
+
+                const assertion = await navigator.credentials.get({ publicKey: options });
+
+                if (assertion) {
+                    alert("✅ Fingerprint Authentication Successful! Redirecting to voting page...");
+                    window.location.href = "voting.html"; // Proceed to voting
+                }
+            } catch (error) {
+                alert("❌ Authentication Failed: " + error.message);
+            }
+        }
+    </script>
+
+</body>
+</html>
